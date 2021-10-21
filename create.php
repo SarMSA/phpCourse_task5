@@ -2,10 +2,9 @@
     require_once './helpers/header.php';
     require_once './db/dbConn.php';
     require_once './helpers/functions.php';
-
+    $id = $_GET['id'];
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $title = CleanInputs($_POST['title']);
-        $desc = cleanInputs($_POST['description']);
         $stDate = CleanInputs($_POST['startDate']);
         $enDate = CleanInputs($_POST['endDate']);
         $errors = [];
@@ -35,7 +34,8 @@
             $errors['enDate'] = 'end date is required !';
         }
         if (count($errors) == 0) {
-            $sql = "INSERT INTO tasks (title , description, startdate, enddate) VALUES ('$title', '$desc', '$stDate', '$enDate')";
+            
+            $sql = "INSERT INTO appointment (day, start, end, user_id) VALUES ('$title', '$stDate', '$enDate', $id)";
             $op = mysqli_query($conn, $sql);
 
             header('location: index.php');
@@ -47,10 +47,10 @@
 
 ?>
 <div class="container">
-    <h1 class="text-center text-primary">Create Tasks</h1>
+    <h1 class="text-center text-primary">Create appointment</h1>
     <form method="POST" action=<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?> enctype ="multipart/form-data">
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"><span class="text-danger">*</span>Title</label>
+            <label for="exampleInputEmail1" class="form-label"><span class="text-danger">*</span>day</label>
             <input type="text" class="form-control" name="title" value='<?php if (!empty($title)) {echo $title;}?>' id="exampleInputEmail1" aria-describedby="emailHelp">
             <?php
                 if (isset($errors['title'])) {
@@ -59,17 +59,8 @@
             ?>
         </div>
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"><span class="text-danger">*</span>Description</label>
-            <input type="text" class="form-control" name="description" value='<?php if (!empty($desc)) {echo $desc;}?>' id="exampleInputEmail1" aria-describedby="emailHelp">
-            <?php
-                if (isset($errors['desc'])) {
-                    echo '<div class=" container alert alert-danger" role="alert">'.$errors['desc'].'</div>';
-                }
-            ?>
-        </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label"><span class="text-danger">*</span>Start Date</label>
-            <input type="date" class="form-control" name="startDate" value='<?php if (!empty($stDate)) {echo $stDate;}?>' id="exampleInputPassword1">
+            <label for="exampleInputPassword1" class="form-label"><span class="text-danger">*</span>Start</label>
+            <input type="time" class="form-control" name="startDate" value='<?php if (!empty($stDate)) {echo $stDate;}?>' id="exampleInputPassword1">
             <?php
                 if (isset($errors['stDate'])) {
                     echo '<div class=" container alert alert-danger" role="alert">'.$errors['stDate'].'</div>';
@@ -77,8 +68,8 @@
             ?>
         </div>
         <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label"><span class="text-danger">*</span>end Date</label>
-            <input type="date" class="form-control" name="endDate" value='<?php if (!empty($enDate)) {echo $enDate;}?>' id="exampleInputPassword1">
+            <label for="exampleInputPassword1" class="form-label"><span class="text-danger">*</span>end</label>
+            <input type="time" class="form-control" name="endDate" value='<?php if (!empty($enDate)) {echo $enDate;}?>' id="exampleInputPassword1">
             <?php
                 if (isset($errors['enDate'])) {
                     echo '<div class=" container alert alert-danger" role="alert">'.$errors['enDate'].'</div>';

@@ -7,6 +7,7 @@
         $name = CleanInputs($_POST['name']);
         $email = CleanInputs($_POST['email']);
         $password = CleanInputs($_POST['password']);
+        $role = CleanInputs($_POST['role']);
         $errors = [];
         //validate name ...
         if (!validate($name, 'emptyVal')) {
@@ -37,12 +38,17 @@
                                     'email'=> $email,
                                     'password'=> $password,
                 ];
-                $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$hashpassword')";
+
+                $sql = "INSERT INTO roles (title) VALUES ('$role')";
+                $id = mysqli_insert_id($conn);
+                $sql = "INSERT INTO users (name, email, password, role_id) VALUES ('$name', '$email', '$hashpassword', $id)";
                 $op = mysqli_query($conn, $sql);
                 header("Location: index.php");
         }
 
     }
+    $roles = ['doctor', 'admin', 'student'];
+
 ?>
 
 
@@ -71,6 +77,18 @@
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label"><span class="text-danger">*</span> Password</label>
                 <input type="password" class="form-control" name="password" value='<?php if (!empty($password)) {echo $password;}?>' id="exampleInputPassword1">
+                <?php
+                    if (isset($errors['password'])) {
+                        echo '<div class=" container alert alert-danger" role="alert">'.$errors['password'].'</div>';
+                    }
+                ?>
+            </div>
+            <div class="mb-3">
+                    <select name="role" id="">
+                <?php foreach($roles as $i){?>   
+                <option value="<?php echo $role['id']?>"><?php echo $i?></option>
+                <?php } ; ?>
+                </select>
                 <?php
                     if (isset($errors['password'])) {
                         echo '<div class=" container alert alert-danger" role="alert">'.$errors['password'].'</div>';

@@ -3,7 +3,7 @@ session_start();
 $server = 'localhost';
 $dbUser = 'root';
 $dbPassword  = '';
-$dbName = 'phpCourse';
+$dbName = 'hospital';
 
 $conn = mysqli_connect($server, $dbUser, $dbPassword, $dbName);
 if(!($conn)) 
